@@ -34,11 +34,65 @@ A RESTful API built with Node.js and Express for an e-commerce platform.
 
 ## API Documentation
 
-### Create Product
+### Base URL
+```
+https://e-com-backend-1gac.onrender.com/v1/products
+```
+
+### Products
+
+#### Get All Products
+```http
+GET /v1/products/all-products
+
+Response 200 (application/json)
+{
+  "status": "success",
+  "message": "Products fetched successfully",
+  "data": [
+    {
+      "_id": "product_id",
+      "name": "Product Name",
+      "category": "Category",
+      "price": "99.99",
+      "description": "Product description",
+      "color": "red",
+      "image": "image_url",
+      "createdAt": "timestamp"
+    }
+  ]
+}
+```
+
+#### Get Single Product
+```http
+GET /v1/products/single-product/:id
+
+Response 200 (application/json)
+{
+  "status": "success",
+  "message": "Product fetched successfully",
+  "data": {
+    "product": {
+      "_id": "product_id",
+      "name": "Product Name",
+      "category": "Category",
+      "price": "99.99",
+      "description": "Product description",
+      "color": "red",
+      "image": "image_url",
+      "createdAt": "timestamp"
+    }
+  }
+}
+```
+
+#### Create Product
 ```http
 POST /v1/products/create-product
 Content-Type: application/json
 
+Request Body:
 {
   "name": "Product Name",
   "category": "Category",
@@ -46,6 +100,39 @@ Content-Type: application/json
   "description": "Product description",
   "color": "red",
   "image": "image_url"
+}
+
+Response 201 (application/json)
+{
+  "status": "success",
+  "message": "Product created successfully",
+  "data": {
+    "product": {
+      "_id": "product_id",
+      "name": "Product Name",
+      "category": "Category",
+      "price": "99.99",
+      "description": "Product description",
+      "color": "red",
+      "image": "image_url",
+      "createdAt": "timestamp"
+    }
+  }
+}
+```
+
+## Status Codes
+- 200: Success
+- 201: Created
+- 400: Bad Request
+- 404: Not Found
+- 500: Server Error
+
+## Error Response Format
+```json
+{
+  "status": "fail",
+  "message": "Error description here"
 }
 ```
 
