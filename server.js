@@ -13,7 +13,6 @@ dotenv.config();
 const app = express();
 connectDB();
 
-//security middlewares
 app.use(helmet());
 app.use(cors());
 app.use(morgan("dev"));
