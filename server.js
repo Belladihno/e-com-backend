@@ -19,7 +19,27 @@ app.use(morgan("dev"));
 app.use(compression());
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+
+app.get('/', (req, res) => {
+  res.status(200).json({
+    status: 'success',
+    message: 'E-commerce API is running!',
+    version: '1.0.0',
+    endpoints: {
+      products: '/v1/products'
+    },
+    documentation: 'https://github.com/Belladihno/e-com-backend'
+  });
+});
+
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'success',
+    message: 'Server is healthy',
+    timestamp: new Date().toISOString()
+  });
+});
+
 app.use("/v1/products", productRoute);
 
 app.use((req, res, next) => {
