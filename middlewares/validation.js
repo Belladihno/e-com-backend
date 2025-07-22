@@ -6,7 +6,6 @@ const createProductSchema = Joi.object({
   description: Joi.string().min(3).max(1000).required().trim(),
   price: Joi.string().required(),
   color: Joi.string().required(),
-  image: Joi.string(),
 });
 
 const updateProductSchema = Joi.object({
@@ -15,7 +14,6 @@ const updateProductSchema = Joi.object({
   description: Joi.string().min(3).max(1000).trim(),
   price: Joi.string(),
   color: Joi.string(),
-  image: Joi.string(),
 });
 
 export default { createProductSchema, updateProductSchema };

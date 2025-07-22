@@ -2,6 +2,8 @@ import Product from "../models/productModel.js";
 import validator from "../middlewares/validation.js";
 import AppError from "../utils/appError.js";
 import APIFEATURES from "../utils/apiFeatures.js";
+import { uploadImage, deleteImage } from "../utils/imageUpload.js";
+
 class ProductController {
   async allProducts(req, res, next) {
     try {
@@ -63,25 +65,24 @@ class ProductController {
 
   async createProduct(req, res, next) {
     try {
-      const { name, category, price, description, color, image } = req.body;
+      const { name, category, price, description, color } = req.body;
+      if (!req.file) {
+        return next(new AppError("Please upload an image", 400));
+      }
       const { error } = validator.createProductSchema.validate({
         name,
         category,
         price,
         description,
         color,
-        image,
       });
       if (error) {
         return next(new AppError(error.details[0].message, 400));
       }
+      const result = await uploadImage(req.file);
       const product = await Product.create({
-        name,
-        category,
-        price,
-        description,
-        color,
-        image,
+        ...req.body,
+        image: result.secure_url,
       });
       res.status(201).json({
         status: "success",
@@ -106,21 +107,29 @@ class ProductController {
         return next(new AppError("product not found", 404));
       }
 
-      const { name, category, price, description, color, image } = req.body;
+      const { name, category, price, description, color } = req.body;
+      let imageUrl = existingProduct.image;
+      // upload image if provided
+      if (req.file) {
+        // Delete old image first
+        await deleteImage(existingProduct.image);
+        // uplaod new image
+        const result = await uploadImage(req.file);
+        imageUrl = result.secure_url;
+      }
       const { error } = validator.updateProductSchema.validate({
         name,
         category,
         price,
         description,
         color,
-        image,
       });
       if (error) {
         return next(new AppError(error.details[0].message, 400));
       }
       const product = await Product.findByIdAndUpdate(
         productId,
-        { name, category, price, description, color, image },
+        { name, category, price, description, color, image: imageUrl },
         { new: true, runValidators: true }
       );
       res.status(200).json({
@@ -145,11 +154,14 @@ class ProductController {
       if (!existingProduct) {
         return next(new AppError("product not found", 404));
       }
-      await Product.findByIdAndDelete(productId)
+      // Delete image from Cloudinary first
+      await deleteImage(existingProduct.image);
+      // Then delete product from database
+      await Product.findByIdAndDelete(productId);
       res.status(204).json({
-        status: 'success',
-        message: 'product deleted'
-      })
+        status: "success",
+        message: "product deleted",
+      });
     } catch (error) {
       return next(new AppError(`delete product failed: ${error.message}`, 500));
     }
