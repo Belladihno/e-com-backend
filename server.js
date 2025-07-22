@@ -20,23 +20,28 @@ app.use(compression());
 
 app.use(express.json());
 
-app.get('/', (req, res) => {
+app.get("/", (req, res) => {
   res.status(200).json({
-    status: 'success',
-    message: 'E-commerce API is running!',
-    version: '1.0.0',
+    status: "success",
+    message: "E-commerce API is running!",
+    version: "1.0.0",
     endpoints: {
-      products: '/v1/products'
+      "Get all products": "GET /v1/products",
+      "Get single product": "GET /v1/products/:id",
+      "Create product": "POST /v1/products",
+      "Update product": "PUT /v1/products/:id",
+      "Delete product": "DELETE /v1/products/:id",
     },
-    documentation: 'https://github.com/Belladihno/e-com-backend/blob/main/README.md'
+    documentation:
+      "https://github.com/Belladihno/e-com-backend/blob/main/README.md",
   });
 });
 
-app.get('/health', (req, res) => {
+app.get("/health", (req, res) => {
   res.status(200).json({
-    status: 'success',
-    message: 'Server is healthy',
-    timestamp: new Date().toISOString()
+    status: "success",
+    message: "Server is healthy",
+    timestamp: new Date().toISOString(),
   });
 });
 

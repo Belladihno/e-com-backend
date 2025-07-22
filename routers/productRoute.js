@@ -3,19 +3,27 @@ import ProductController from "../controllers/productController.js";
 import upload from "../middlewares/multer.js";
 
 const router = express.Router();
+// GET /v1/products - Get all products
+router.get("/", ProductController.allProducts);
 
-router.get("/all-products", ProductController.allProducts);
-router.get("/single-product/:id", ProductController.singleProduct);
+// GET /v1/products/:id - Get single product
+router.get("/:id", ProductController.singleProduct);
+
+// POST /v1/products - Create new product
 router.post(
-  "/create-product",
+  "/",
   upload.single("image"),
   ProductController.createProduct
 );
+
+// PUT /v1/products/:id - Update product
 router.put(
-  "/update-product/:id",
+  "/:id",
   upload.single("image"),
   ProductController.updateProduct
 );
-router.delete("/delete-product/:id", ProductController.deleteProduct);
+
+// DELETE /v1/products/:id - Delete product
+router.delete("/:id", ProductController.deleteProduct);
 
 export default router;
