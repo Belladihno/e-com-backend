@@ -28,7 +28,7 @@ app.get('/', (req, res) => {
     endpoints: {
       products: '/v1/products'
     },
-    documentation: 'https://github.com/Belladihno/e-com-backend'
+    documentation: 'https://github.com/Belladihno/e-com-backend/blob/main/README.md'
   });
 });
 
